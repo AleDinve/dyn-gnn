@@ -1,1 +1,2 @@
-# dyn-gnn
+# Weisfeiler--Lehman goes Dynamic: An Analysis of the Expressive Power of Graph Neural Networks for Attributed and Dynamic Graphs
+Github repository associated to the paper "Weisfeiler--Lehman goes Dynamic: An Analysis of the Expressive Power of Graph Neural Networks for Attributed and Dynamic Graphs" from Beddar-Wiesing, S., D'Inverno, G. A., Graziani, C., Lachi, V., Moallemy-Oureh, A., Scarselli, F., & Thomas, J. M. 
