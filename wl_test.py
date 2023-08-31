@@ -25,7 +25,7 @@ def dataset_generator(card_set, num_nodes, batch_size=1, save =False):
         if save:
             np.savetxt('graphs/graph'+str(i)+'.txt',A.astype(int))
         
-        G = nx.from_numpy_matrix(A)
+        G = nx.from_numpy_matrix(A).to_undirected()
         g = from_networkx(G)
         g.x = torch.tensor([[1] for i in range(num_nodes)], dtype=torch.float)
         dataset.append(g)
@@ -48,7 +48,7 @@ def dyn_dataset_generator(card_set, seq_len, num_nodes, batch_size=1, save =Fals
                 if save:
                     np.savetxt('graphs/graph'+str(i)+'_time_'+str(t)+'.txt',A.astype(int))
                 
-                G = nx.from_numpy_matrix(A)
+                G = nx.from_numpy_matrix(A).to_undirected()
                 g = from_networkx(G)
                 g.x = torch.tensor([[1] for i in range(num_nodes)], dtype=torch.float)
                 if labels is not None:
