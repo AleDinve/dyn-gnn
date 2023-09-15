@@ -1,6 +1,5 @@
-from torch_geometric.nn import GraphConv, global_add_pool
 import torch
-from torch.nn import RNN, Linear
+from torch_geometric import seed
 import torch.nn.functional as F
 from model import DYN_GNN
 import pandas as pd
@@ -9,7 +8,7 @@ from wl_test import dyn_wl_generator, dyn_synth_prod
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'gpu')
 
-def model_training(num_nodes, seq_len, hidden_gnn):
+def model_training(seq_len, hidden_gnn, it):
     raw_data = []
     train_loader = dyn_synth_prod(seq_len, batch_size=32)
     # eval_train_loader = dyn_synth_prod(seq_len)
@@ -54,19 +53,22 @@ def model_training(num_nodes, seq_len, hidden_gnn):
         train()     
         train_loss = test(train_loader)
         print(f'Train loss: {train_loss}')
-        raw_data.append({'Epoch': epoch, 'Train loss': train_loss, 'Number of timestamps': seq_len, 'GNN hidden dimension': hidden_gnn})
+        raw_data.append({'Epoch': epoch, 'Train loss': train_loss, 
+                         'Number of timestamps': seq_len, 'GNN hidden dimension': hidden_gnn,
+                         'iteration':it})
 
     return raw_data
 
 def main():
-    num_nodes = 6
     raw_data = []
     hidden_list = [4,8,16,32]
-    for seq_len in range(4,7):
-        for hidden_gnn in hidden_list:
-            raw_data += model_training(num_nodes, seq_len, hidden_gnn)
-    data = pd.DataFrame.from_records(raw_data)
-    data.to_csv('dynamics.csv')
+    for it in range(5):
+        seed.seed_everything(10*(it+1))
+        for seq_len in range(4,7):
+            for hidden_gnn in hidden_list:
+                raw_data += model_training(seq_len, hidden_gnn, it)
+        data = pd.DataFrame.from_records(raw_data)
+        data.to_csv('dynamics.csv')
 
 if __name__ == '__main__':
     main()
