@@ -23,7 +23,8 @@ class DYN_GNN(torch.nn.Module):
                     self.gnns[-1].append(GraphConv(input_gnn, hidden_gnn, aggr='add', bias=True).to(device))
                 else:
                     self.gnns[-1].append(GINConv(Sequential(Linear(input_gnn, hidden_gnn),
-                       BatchNorm1d(hidden_gnn), ReLU(),
+                       BatchNorm1d(hidden_gnn),
+                        ReLU(),
                        Linear(hidden_gnn, hidden_gnn), ReLU())).to(device))
                 input_gnn = hidden_gnn
 
