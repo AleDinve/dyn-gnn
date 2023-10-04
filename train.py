@@ -8,15 +8,16 @@ from wl_test import dyn_wl_generator, dyn_synth_prod
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'gpu')
 
-def model_training(seq_len, hidden_gnn, it):
+def model_training(seq_len, hidden_gnn, hidden_rnn, it):
     raw_data = []
     train_loader = dyn_synth_prod(seq_len, batch_size=32)
     # eval_train_loader = dyn_synth_prod(seq_len)
 
 
+
     lr = 0.001
-    model = DYN_GNN(input_gnn=1, hidden_gnn=hidden_gnn, output_gnn=8, layers_gnn=3, 
-                    hidden_rnn=8, sequence_length=seq_len, device = device)
+    model = DYN_GNN(input_gnn=1, hidden_gnn=hidden_gnn, output_gnn=hidden_rnn, layers_gnn=6, 
+                    hidden_rnn=hidden_rnn, sequence_length=seq_len, device = device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     epochs = 300
@@ -61,14 +62,17 @@ def model_training(seq_len, hidden_gnn, it):
 
 def main():
     raw_data = []
-    hidden_list = [4,8,16,32]
-    for it in range(5):
+    hidden_list = [1,4,8,16,32]
+    it = 1
+    hidden_rnn = 8
+    for it in range(0,10):
         seed.seed_everything(10*(it+1))
         for seq_len in range(4,7):
+            print('seq_len: '+str(seq_len))
             for hidden_gnn in hidden_list:
-                raw_data += model_training(seq_len, hidden_gnn, it)
-        data = pd.DataFrame.from_records(raw_data)
-        data.to_csv('dynamics.csv')
+                raw_data += model_training(seq_len, hidden_gnn, hidden_rnn, it)
+    data = pd.DataFrame.from_records(raw_data)
+    data.to_csv('dynamics_03_10.csv')
 
 if __name__ == '__main__':
     main()

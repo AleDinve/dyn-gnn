@@ -2,7 +2,6 @@
 '''@date: 02/03/2023'''
 
 import torch
-from torch_geometric import seed
 from torch_geometric.nn import WLConv
 from torch_geometric.utils import from_networkx
 from torch_geometric.loader import DataLoader
@@ -13,7 +12,7 @@ import networkx as nx
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-seed.seed_everything(10)
+#seed.seed_everything(10)
 ## WL class to find colors
 
 def dataset_generator(card_set, num_nodes, batch_size=1, save =False):
@@ -217,9 +216,11 @@ def dyn_synth_prod(seq_len, num_it = 7, batch_size = 1):
         dyn_graph_list.append(dyn)
         color_list.append(col)
     print('checkpoint')
+    print(np.shape(np.unique(np.array(color_list))))
     amin, amax = min(color_list), max(color_list)
     for i, val in enumerate(color_list):
-        color_list[i] = (val-amin) / (amax-amin)
+        color_list[i] = (val-amin) / (amax-amin) 
+    
     for i, g  in enumerate(dyn_graph_list):
         for t in range(seq_len):
             g[t].y = color_list[i]
