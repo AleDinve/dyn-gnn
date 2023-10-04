@@ -65,14 +65,14 @@ def main():
     hidden_list = [1,4,8,16,32]
     it = 1
     hidden_rnn = 8
-    for it in range(0,10):
-        seed.seed_everything(10*(it+1))
-        for seq_len in range(4,7):
-            print('seq_len: '+str(seq_len))
-            for hidden_gnn in hidden_list:
+    for seq_len in range(4,9):
+        print('seq_len: '+str(seq_len))
+        for hidden_gnn in hidden_list:
+            for it in range(0,10):
+                seed.seed_everything(10*(it+1))
                 raw_data += model_training(seq_len, hidden_gnn, hidden_rnn, it)
-    data = pd.DataFrame.from_records(raw_data)
-    data.to_csv('dynamics_03_10.csv')
+        data = pd.DataFrame.from_records(raw_data)
+        data.to_csv('dynamics_04_10_T'+str(seq_len)+'.csv')
 
 if __name__ == '__main__':
     main()
