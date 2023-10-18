@@ -49,13 +49,13 @@ def model_training(seq_len, hidden_gnn, hidden_rnn, it):
             y = torch.reshape(data[0].y,(data[0].num_graphs,1))          
             loss = F.mse_loss(pred, y)
             tot_loss += loss.item() * data[0].num_graphs
-            total_correct += int((torch.abs(pred-y)<1/(2*math.sqrt(len(loader.dataset)))).sum())
+            total_correct += int((torch.abs(pred-y)<1/(2*(math.sqrt(len(loader.dataset))-1))).sum())
         return tot_loss / len(loader.dataset), total_correct/len(loader.dataset)*100
 
     for epoch in range(1, epochs + 1):
         train()     
         train_loss, total_correct = test(train_loader)
-        if epoch%50==0:
+        if epoch%5==0:
             print(f'epoch {epoch}')
             print(f'Train loss: {train_loss}, Train accuracy: {total_correct}%')
         raw_data.append({'Epoch': epoch, 'Train loss': train_loss, 
@@ -65,8 +65,7 @@ def model_training(seq_len, hidden_gnn, hidden_rnn, it):
 
 def main():
     raw_data = []
-    hidden_list = [1,4,8,16,32]
-    it = 1
+    hidden_list = [1,4,8]
     hidden_rnn = 8
     for seq_len in range(4,6):
         print('seq_len: '+str(seq_len))

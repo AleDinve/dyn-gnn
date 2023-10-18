@@ -215,8 +215,9 @@ def dyn_synth_prod(seq_len, num_it = 7, batch_size = 1):
         col = dyn_wl(model, dyn, True)
         dyn_graph_list.append(dyn)
         color_list.append(col)
-    print('checkpoint')
-    print(np.shape(np.unique(np.array(color_list))))
+    ord_color_list, ind_inverse = np.unique(color_list, return_inverse=True)
+    natural_list = np.array([i for i in range(len(ord_color_list))])
+    color_list = natural_list[ind_inverse].tolist()
     amin, amax = min(color_list), max(color_list)
     for i, val in enumerate(color_list):
         color_list[i] = (val-amin) / (amax-amin) 
@@ -230,6 +231,5 @@ def dyn_synth_prod(seq_len, num_it = 7, batch_size = 1):
 
 
 if __name__ == '__main__':
-    train_loader = dyn_synth_prod(5)
-    print(train_loader.dataset[0])
+    train_loader = dyn_synth_prod(4)
 
