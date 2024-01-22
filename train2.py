@@ -1,7 +1,7 @@
 import torch
 from torch_geometric import seed
 import torch.nn.functional as F
-from model import DYN_GNN
+from model2 import DYN_GNN
 import math
 import pandas as pd
 
